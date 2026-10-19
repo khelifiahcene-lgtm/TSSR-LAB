@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projet Home Lab - Ahcéne Khelifi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0ea5e9;       /* Cyan tech */
+            --primary-glow: rgba(14, 165, 233, 0.4);
+            --bg-color: #0b1121;      /* Fond très sombre */
+            --card-bg: rgba(21, 30, 50, 0.75); /* Légèrement transparent pour voir le fond */
+            --text-main: #f8fafc;     /* Blanc cassé */
+            --text-muted: #94a3b8;    /* Gris clair */
+            --border-color: #2dd4bf40;/* Bordure subtile cyan/teal */
+            --accent-green: #10b981;  /* Vert status OK */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            /* Image de fond de serveurs avec un calque sombre pour garder le texte lisible */
+            background-image: 
+                linear-gradient(rgba(11, 17, 33, 0.85), rgba(11, 17, 33, 0.95)),
+                url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.7;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header / Hero Section */
+        header {
+            background: linear-gradient(180deg, rgba(15,23,42,0.9) 0%, rgba(11,17,33,0) 100%);
+            padding: 80px 20px 80px;
+            text-align: center;
+            border-bottom: 1px solid rgba(14, 165, 233, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: -webkit-linear-gradient(45deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(56, 189, 248, 0.2);
+        }
+
+        header p {
+            margin: 20px auto 0;
+            font-size: 1.15rem;
+            color: #cbd5e1;
+            max-width: 700px;
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto 40px;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        /* Image Showcase */
+        .image-showcase {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+            margin-bottom: 50px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            position: relative;
+            transform: translateY(-40px);
+        }
+
+        /* Petit effet "Led de statut" sur le conteneur image */
+        .image-showcase::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-green);
+        }
+
+        .image-showcase img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            display: block;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-top: 15px;
+        }
+
+        .image-caption {
+            margin-top: 15px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* Section Titles */
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin: 40px 0 25px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        h2::before {
+            content: '>';
+            color: var(--primary);
+            font-family: 'Fira Code', monospace;
+            font-weight: bold;
+        }
+
+        /* Card Grid for Skills */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Ligne lumineuse en haut des cartes */
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0.3;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(14, 165, 233, 0.4);
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.15);
+            background: rgba(21, 30, 50, 0.85);
+        }
+
+        .card:hover::after {
+            opacity: 1;
+        }
+
+        .card h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.25rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card p, .card ul {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .card ul {
+            padding-left: 20px;
+        }
+
+        .card li {
+            margin-bottom: 8px;
+        }
+        
+        .card li strong {
+            color: #cbd5e1;
+        }
+
+        /* Badges */
+        .badges-container {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-family: 'Fira Code', monospace;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .badge.vmware { background-color: rgba(2, 132, 199, 0.2); color: #38bdf8; border-color: #0284c7; }
+        .badge.windows { background-color: rgba(29, 78, 216, 0.2); color: #60a5fa; border-color: #1d4ed8; }
+        .badge.network { background-color: rgba(194, 65, 12, 0.2); color: #fb923c; border-color: #c2410c; }
+        .badge.storage { background-color: rgba(71, 85, 99, 0.3); color: #94a3b8; border-color: #475569; }
+
+        /* Table */
+        .table-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            margin-bottom: 50px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background-color: rgba(0,0,0,0.4);
+            padding: 16px 20px;
+            font-weight: 600;
+            color: #fff;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-muted);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: rgba(255,255,255,0.03);
+        }
+
+        td strong {
+            color: #e2e8f0;
+        }
+
+        .font-mono {
+            font-family: 'Fira Code', monospace;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            color: var(--primary);
+        }
+
+        /* Footer / Contact */
+        footer {
+            background-color: rgba(11, 17, 33, 0.9);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            backdrop-filter: blur(15px);
+            color: #cbd5e1;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        footer h3 {
+            color: #ffffff;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        footer h3::before {
+            content: 'sys.contact()';
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            color: var(--primary);
+            font-weight: 400;
+        }
+
+        footer p {
+            margin: 5px 0;
+            font-size: 1rem;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+
+        .contact-item:hover {
+            background: rgba(14, 165, 233, 0.15);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.2);
+        }
+
+        .contact-item a, .contact-item span {
+            color: #e2e8f0;
+            text-decoration: none;
+        }
+
+        .contact-item a:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Infrastructure TSSR</h1>
+        <p>Conception, déploiement et administration d'un environnement d'entreprise simulé complet (Home Lab).</p>
+    </header>
+
+    <div class="container">
+        
+        <div class="image-showcase">
+            <img src="image.png" alt="Architecture réseau du Home Lab">
+            <div class="image-caption">status: online | module: topology_map</div>
+        </div>
+
+        <h2>Compétences Techniques</h2>
+        
+        <div class="grid">
+            <div class="card">
+                <h3>Virtualisation <div class="badges-container"><span class="badge vmware">VMware</span><span class="badge vmware">ESXi</span></div></h3>
+                <ul>
+                    <li><strong>Déploiement d'hyperviseurs :</strong> Installation et configuration de VMware Workstation hébergeant un hyperviseur bare-metal (ESXi).</li>
+                    <li><strong>Nested Virtualization :</strong> Conception d'un lab permettant de simuler des conditions de production réelles sur une infrastructure isolée.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Architecture Réseau <div class="badges-container"><span class="badge network">pfSense</span><span class="badge network">Routage</span></div></h3>
+                <ul>
+                    <li><strong>Adressage IP :</strong> Élaboration d'une topologie avec séparation entre serveurs et parc utilisateur.</li>
+                    <li><strong>Sécurité périmétrique :</strong> Mise en place d'un pare-feu/routeur entre le WAN public et le LAN (Host-Only).</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Système Windows <div class="badges-container"><span class="badge windows">Win Server</span><span class="badge windows">AD/DNS</span></div></h3>
+                <ul>
+                    <li><strong>Gestion de l'identité :</strong> Contrôleur de domaine (Active Directory) pour la centralisation des comptes.</li>
+                    <li><strong>Services Core :</strong> Serveurs DNS locaux et rôles DHCP pour l'attribution dynamique des adresses aux clients.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Stockage & Applicatif <div class="badges-container"><span class="badge storage">NAS</span><span class="badge storage">Web</span></div></h3>
+                <ul>
+                    <li><strong>Stockage réseau :</strong> Déploiement d'un serveur NAS pour centraliser les partages de fichiers.</li>
+                    <li><strong>Services Web :</strong> Installation d'un serveur Web dédié au sein du réseau d'infrastructure (DMZ interne).</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>Plan d'Adressage IP</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Équipement</th>
+                        <th>Réseau / Interface</th>
+                        <th>Adresse IP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>pfSense (WAN)</strong></td>
+                        <td>Bridge</td>
+                        <td><span class="font-mono">DHCP (Auto)</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>pfSense (LAN)</strong></td>
+                        <td>Host-Only</td>
+                        <td><span class="font-mono">172.16.10.250</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>VM-ESXi (Hyperviseur)</strong></td>
+                        <td>Host-Only</td>
+                        <td><span class="font-mono">172.16.10.100</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>VM-SRV Windows (AD/DNS/DHCP)</strong></td>
+                        <td>Host-Only</td>
+                        <td><span class="font-mono">172.16.10.1</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>VM-Serveur Web</strong></td>
+                        <td>Host-Only</td>
+                        <td><span class="font-mono">172.16.10.30</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>VM-NAS</strong></td>
+                        <td>Host-Only</td>
+                        <td><span class="font-mono">172.16.10.40</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Postes Clients (Windows 11)</strong></td>
+                        <td>Host-Only (Étendue DHCP)</td>
+                        <td><span class="font-mono">172.16.100.X</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <footer>
+        <h3>Ahcéne Khelifi</h3>
+        <p>Administrateur Systèmes et Réseaux</p>
+        <p style="color: var(--text-muted); font-size: 0.9em; margin-top: 10px;">📍 Denain (59220) | Mobilité : Valenciennois, Douaisis, Métropole Lilloise</p>
+        
+        <div class="contact-links">
+            <div class="contact-item">
+                📧 <a href="mailto:khelifi.ahcene@gmail.com">khelifi.ahcene@gmail.com</a>
+            </div>
+            <div class="contact-item">
+                📞 <span>06 62 68 59 71</span>
+            </div>
+            <div class="contact-item">
+                💼 <a href="https://www.linkedin.com/in/ahcene-khelifi/" target="_blank">LinkedIn</a>
+            </div>
+            <div class="contact-item">
+                🐙 <a href="https://github.com/khelifiahcene-lgtm" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
